@@ -8,29 +8,84 @@
 
 #define PIR_in 12
 
+typedef enum{
+	int ARMED = 0,
+	int DISARMED = 1
+}alarmStates;
+
+typedef enum{
+	int INERT = 0,
+	int TRIGD = 1
+	}triggeredStates;
 
 int main(){
     iolib_init();
     
     //will add timer so the alarm is not triggered as the user is leaving the room
     //the system can detect movement during start up, but it is not necessarily armed
+		
+	
+	//alarm is disabled as of now
+	alarmStates alarmState = DISARMED;//the system is disarmed
+	triggeredStates triggeredState = INERT;//PIR detector is not triggered
+	
+	
+	//setting up PIR motion sensor input
+    iolib_setdir(9, PIR_in , BBBIO_DIR_IN);//HIGH is motion detected. LOW is no motion detected (do nothing)
     
-    
-    iolib_setdir(9, PIR_in , BBBIO_DIR_IN);
-    
+	int i=0;
+	
     while(1){
-        if(is_high(9, PIR_in)){
-            printf("Motion detected\r\n");
-        }
-        else{
-            printf("NO MOTION DETECTED\r\n");
-        }
-        
-        usleep(50*1000);
+		
+		if (alarmState == DISARMED){
+			//function to wait for text input to arm the system
+			//this will execute the first time the while loop is entered
+			//the function waiting for the text will have its own waiting for a text functionality
+			
+			//once the text is received to arm, then the system will become armed
+			//if text is 'arm' or some password, then the state will go to ARMED
+			alarmState = ARMED;
+			usleep(5*1000*1000);//wait 20 (right now it's 5) seconds after the system is armed
+			printf("SECURITY SYSTEM ARMED\r\n");
+		}
+		
+		
+		
+		if (alarmState = ARMED){
+			if(is_high(9, PIR_in)){
+				printf("Motion detected\r\n");
+				
+				if (i==0){
+					i=1;
+					system("aplay roxanne.wav &");//play alarm audio
+				}
+				triggeredState = TRIGD;//alarm has been triggered
+			}
+			else{
+				printf("NO MOTION DETECTED\r\n");
+			}
+		}
+		
+		//armed system and motion is detected
+		if((triggeredState == TRIGD) && (alarmState == ARMED)){
+			//alarm audio plays
+			//function to receive text to disable alarm system
+			//send a text saying that the alarm system has been triggered
+			//logic for whether or not the text is the correct text to disable alarm system?
+			
+		}
+		
+		if ((triggeredState == INERT) && (alarmState == ARMED)){
+			//no audio plays since no motion is detected, possibly make sure audio is off or turn it off
+			//function to receive text to disable alarm system if user wants
+			
+		}
+		
+		
+		
+        usleep(25*1000);
     }
     
-    
-    
-    
+
     return 0;
 }
