@@ -72,7 +72,7 @@ int main(){
 		//armed system and motion has been detected
 		if((triggeredState == TRIGD) && (alarmState == ARMED)){
 			alarmStates newState = disarmDevice(triggeredState);
-			alarmState = newstate;//might be the same state as before
+			alarmState = newState;//might be the same state as before
 			
 			//function to receive text to disable alarm system
 			//send a text saying that the alarm system has been triggered

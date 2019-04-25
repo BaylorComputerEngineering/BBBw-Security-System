@@ -18,7 +18,7 @@ alarmStates armDevice(alarmStates alarmState){
     while(alarmState == DISARMED){
     	system("python ArmDisarm.py");
     	usleep(1000);
-		char ArmDisarm[];//init
+		char ArmDisarm[3];//init
 		const char filename[] = "ArmDisarm.txt";
 		FILE *fp;//create file pointer then reading from it to val
 		fp = fopen(filename, "r" );
@@ -55,7 +55,7 @@ alarmStates disarmDevice(triggeredStates trigState){
 		    	disable = !strcmp(password, "1234");//will need a preset internal password
 			
 		}  
-	}
+	
 	
 	
 	
